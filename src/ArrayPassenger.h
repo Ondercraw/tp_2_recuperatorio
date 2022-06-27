@@ -2,7 +2,7 @@
  * ArrayPassenger.h
  *
  *  Created on: 11 may. 2022
- *      Author: ungim
+ *      Author: Thomas Velazco
  */
 
 #ifndef ARRAYPASSENGER_H_
@@ -100,5 +100,7 @@ int sortByLastName(Passenger* list, int len, int order);
 *
 */
 int printPassenger(Passenger* list, int length);
+
+int addForcedPassengers(Passenger* list, int size);
 
 #endif /* ARRAYPASSENGER_H_ */

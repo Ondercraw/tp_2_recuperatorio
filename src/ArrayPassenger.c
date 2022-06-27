@@ -6,6 +6,7 @@
  */
 
 #include "ArrayPassenger.h"
+#include "inputsTp.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -49,10 +50,10 @@ Passenger getPassenger()
 	printf("Ingrese codigo de vuelo:\n");
 	fflush(stdin);
 	gets(unPasajero.flycode);
-	printf("Ingrese tipo de pasajero: \n");
+	printf("Ingrese tipo de pasajero: (1 = turista, 2 = ejecutiva): \n");
 	fflush(stdin);
 	scanf("%d",&unPasajero.typePassenger);
-	printf("Ingrese el estado de vuelo: \n");
+	printf("Ingrese el estado de vuelo: (1 = activo, 2 = cancelado): \n");
 	fflush(stdin);
 	scanf("%d",&unPasajero.statusFlight);
 
@@ -205,6 +206,67 @@ int sortByLastName(Passenger *list, int len, int order)
 	}
 	return 0;
 }
+
+int sortByFlyCode(Passenger list[], int size, int order)
+{
+	Passenger aux;
+
+	if (list != NULL || size >= 0)
+	{
+		if (order == 1)
+		{
+			for(int i = 0; i < size - 1; i++)
+			{
+				for (int j = i + 1; j < size; j++)
+				{
+					if (strcmp(list[i].flycode, list[j].flycode) > 0)
+					{
+						aux = list[i];
+						list[i] = list[j];
+						list[j] = aux;
+					}
+					if (strcmp(list[i].flycode, list[j].flycode) == 0)
+					{
+						if (list[i].statusFlight > list[j].statusFlight)
+						{
+							aux = list[i];
+							list[i] = list[j];
+							list[j] = aux;
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			for(int i = 0; i < size - 1; i++)
+			{
+				for (int j = i + 1; j < size; j++)
+				{
+					if (strcmp(list[i].flycode, list[j].flycode) < 0)
+					{
+						aux = list[i];
+						list[i] = list[j];
+						list[j] = aux;
+					}
+					if (strcmp(list[i].flycode, list[j].flycode) == 0)
+					{
+						if (list[i].statusFlight < list[j].statusFlight)
+						{
+							aux = list[i];
+							list[i] = list[j];
+							list[j] = aux;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return 0;
+}
+
+
 int printPassenger(Passenger* list, int length)
 {
 	printf(
@@ -216,7 +278,7 @@ int printPassenger(Passenger* list, int length)
 		if(list[i].isEmpty != -1){
 
 			printf(
-					"\t%d\t\t %s\t \t\t%s\t \t\t%s\t \t\t%f\t \t\t\t%d \t\t\t%d \n",
+					"\t%d\t\t %s\t \t\t%s\t \t\t%s\t \t\t%.2f\t \t\t\t%d \t\t\t%d \n",
 					list[i].id, list[i].name, list[i].lastName, list[i].flycode,
 					list[i].price, list[i].typePassenger, list[i].statusFlight);
 		} else {
@@ -230,75 +292,117 @@ int printPassenger(Passenger* list, int length)
 int informData (Passenger* list, int len)
 {
 	int option;
-	int subOption;
-	int order;
+		int subOption;
+		int order;
+		int totalPassengers;
+		int finalPrice;
+		int average;
+		int passengersOverAveragePrice;
 
-	option = 0;
-	subOption = 0;
-	order = 0;
+		option = 0;
+		subOption = 0;
+		order = 0;
+		totalPassengers = countPassengers(list, len);
+		finalPrice = countPassengersPrices(list, len);
+		average = calculateAveragePrice(list, len);
+		passengersOverAveragePrice = countPassengrOverAveragePrice (list, len);
 
-	do
-	{
-		printf(" Seleccione una opcion \n\n");
-		printf("\n1 Informar PASAJEROS  ");
-		printf("\n2 Informar PROMEDIO y TOTAL ");
-		printf("\n3 SALIR |->\n");
-
-		printf("\nIngrese opcion:");
-
-		fflush(stdin);
-		scanf("%d", &option);
-
-		switch (option)
+		do
 		{
-			case 1:
-				printf(" Seleccione una opcion \n\n");
-				printf("\n1 Ordenados ALFABETICAMENTE y por TIPO DE PASAJERO  ");
-				printf("\n2 Ordenados por CODIGO DE VUELO ");
-				printf("\n3 SALIR \n");
+			printf("Seleccione una opcion \n\n");
+			printf("\n1 Informar PASAJEROS ");
+			printf("\n2 Informar PROMEDIO y TOTAL ");
+			printf("\n3 SALIR \n");
 
-				printf("\nIngrese opcion:");
+			printf("\nIngrese opcion:");
 
-				fflush(stdin);
-				scanf("%d", &subOption);
+			fflush(stdin);
+			scanf("%d", &option);
 
-				switch (subOption)
-				{
-					case 1:
-						printf(" Seleccione una opcion \n\n");
-						printf("\n1 Ordenar de MAYOR a MENOR  ");
-						printf("\n2 Ordenar de MENOR a MAYOR ");
+			switch (option)
+			{
+				case 1:
+					printf(" Seleccione una opcion \n\n");
+					printf("\n1 Ordenados ALFABETICAMENTE y por TIPO DE PASAJERO ");
+					printf("\n2 Ordenados por CODIGO DE VUELO ");
+					printf("\n3 SALIR \n");
 
-						printf("\nIngrese opcion:");
+					printf("\nIngrese opcion:");
 
-						fflush(stdin);
-						scanf("%d", &order);
+					fflush(stdin);
+					scanf("%d", &subOption);
 
-						sortByLastName(list, len, order);
-						printPassenger(list, len);
-					break;
-					case 2:
-						printPassenger(list, len);
-					break;
-					case 3:
-					break;
-					default:
-					break;
-				}
+					switch (subOption)
+					{
+						case 1:
+							printf(" Seleccione una opcion \n\n");
+							printf("\n1 Ordenar de MENOR a MAYOR  ");
+							printf("\n2 Ordenar de MAYOR a MENOR ");
 
-			break;
-			case 2:
+							printf("\nIngrese opcion:");
 
-			break;
-			case 3:
-			break;
-			default:
-			break;
-		}
-	}while (option != 3);
+							fflush(stdin);
+							scanf("%d", &order);
 
+							sortByLastName(list, len, order);
+							printPassenger (list, len);
+						break;
+						case 2:
+							printf(" Seleccione una opcion \n\n");
+							printf("\n1 Ordenar de MENOR a MAYOR ");
+							printf("\n2 Ordenar de MAYOR a MENOR ");
 
-	return 0;
+							printf("\nIngrese opcion:");
+
+							fflush(stdin);
+							scanf("%d", &order);
+
+							sortByFlyCode(list, len, order);
+							printPassenger (list, len);
+						break;
+						case 3:
+							printf("Saliendo del menu.");
+						break;
+						default:
+							printf("Opcion invalida \n\n");
+
+						break;
+					}
+
+				break;
+				case 2:
+					printf(" VALOR TOTAL: [$%d] \n", finalPrice);
+					printf(" PROMEDIO DE PRECIOS: [$%d] \n", average);
+					printf(" TOTAL PASAJEROS: [%d] \n", totalPassengers);
+					printf(" CANTIDAD DE PASAJEROS QUE SUPERAN EL PRECIO PROMEDIO: [%d] \n", passengersOverAveragePrice);
+				break;
+				case 3:
+					printf("Saliendo del menu");
+				break;
+				default:
+					printf("Opcion invalida \n\n");
+				break;
+			}
+		}while (option != 3);
+
+		return 0;
 }
 
 
+int addForcedPassengers(Passenger* list, int size)
+{
+	Passenger forcedPassengers[5] = {{0, "Thomas", "Velazco", 2500, "02A" , 4, 1, 2},
+										{0,"Matias", "Fuda", 2200, "A52" , 3, 1, 1},
+										{0, "Demian", "Millan", 1500, "C13" , 2, 2, 2},
+										{0, "Lucas", "Pulido", 500, "B31" , 1, 3, 1},
+										{0, "Nacho", "Lopez", 8500, "3BD" , 4, 2, 1}};
+	int i;
+
+	for (i = 0; i < 5; i++)
+	{
+		forcedPassengers[i].id = generadorId();
+		list[i] = forcedPassengers[i];
+	}
+
+	return 0;
+}

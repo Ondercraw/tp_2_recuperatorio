@@ -14,4 +14,12 @@ void rellenarFloat(float* variableRecibida, char textoAMostrar[]);
 
 void rellenarArray(char arrayRecibido[], char textoAMostrar[]);
 
+int countPassengers (Passenger* list, int size);
+
+int countPassengersPrices (Passenger* list, int size);
+
+int calculateAveragePrice (Passenger* list, int size);
+
+int countPassengrOverAveragePrice (Passenger* list, int size);
+
 #endif /* INPUTSTP_H_ */
